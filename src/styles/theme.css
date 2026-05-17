@@ -1,0 +1,102 @@
+/* ============================================================
+   HEROback Frontend — Theme Variables
+   Sistema dual de variables CSS controlado por [data-theme] en
+   <html>. Coherente con la paleta del backend Pug (indigo + ámbar
+   sobre superficies oscuras profundas), con su contraparte clara
+   afín y refinada.
+   ============================================================ */
+
+:root {
+    /* Tipografías */
+    --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+    --font-body: 'Inter Tight', 'Segoe UI', system-ui, sans-serif;
+
+    /* Radios / sombras */
+    --radius: 8px;
+    --radius-lg: 14px;
+    --radius-xl: 22px;
+
+    /* Constantes neutras */
+    --good: #16a34a;
+    --bad: #dc2626;
+    --neutral: #6b7280;
+    --unknown: #9ca3af;
+
+    /* Transiciones reutilizables */
+    --t-fast: 120ms cubic-bezier(.4, 0, .2, 1);
+    --t-med:  220ms cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ── Tema OSCURO (default, coherente con el backend) ───────── */
+:root,
+[data-theme='dark'] {
+    --primary: #6366f1;
+    --primary-dk: #4338ca;
+    --primary-on: #ffffff;
+    --accent: #f59e0b;
+    --accent-on: #1c1304;
+
+    --bg: #0b0b14;
+    --bg2: #14142b;
+    --bg3: #1a1a3a;
+
+    --surface: #1c1c38;
+    --surface-elev: #25254a;
+    --border: #2e2e5c;
+    --border-strong: #3f3f7a;
+
+    --text: #e7e7f4;
+    --text-muted: #9494b8;
+    --text-dim: #6b6b8a;
+
+    --danger: #ef4444;
+    --success: #22c55e;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+    --shadow: 0 6px 24px -8px rgba(0, 0, 0, .55);
+    --shadow-lg: 0 20px 50px -20px rgba(0, 0, 0, .7);
+
+    /* Acento de fondo: malla suave */
+    --bg-mesh:
+        radial-gradient(at 12% 8%, rgba(99, 102, 241, .15) 0px, transparent 50%),
+        radial-gradient(at 88% 96%, rgba(245, 158, 11, .08) 0px, transparent 55%),
+        radial-gradient(at 50% 50%, rgba(67, 56, 202, .06) 0px, transparent 60%);
+
+    color-scheme: dark;
+}
+
+/* ── Tema CLARO ───────────────────────────────────────────── */
+[data-theme='light'] {
+    --primary: #4f46e5;
+    --primary-dk: #3730a3;
+    --primary-on: #ffffff;
+    --accent: #d97706;
+    --accent-on: #ffffff;
+
+    --bg: #faf9f7;
+    --bg2: #f3f1ec;
+    --bg3: #e8e4dc;
+
+    --surface: #ffffff;
+    --surface-elev: #fbfaf6;
+    --border: #e3dfd6;
+    --border-strong: #c8c2b5;
+
+    --text: #1a1a2e;
+    --text-muted: #5a5a7a;
+    --text-dim: #8a8aa5;
+
+    --danger: #dc2626;
+    --success: #16a34a;
+
+    --shadow-sm: 0 1px 2px rgba(28, 26, 35, .06);
+    --shadow: 0 8px 24px -10px rgba(28, 26, 35, .15);
+    --shadow-lg: 0 24px 60px -24px rgba(28, 26, 35, .22);
+
+    --bg-mesh:
+        radial-gradient(at 12% 8%, rgba(79, 70, 229, .08) 0px, transparent 50%),
+        radial-gradient(at 88% 96%, rgba(217, 119, 6, .07) 0px, transparent 55%),
+        radial-gradient(at 50% 50%, rgba(79, 70, 229, .04) 0px, transparent 60%);
+
+    color-scheme: light;
+}
