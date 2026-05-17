@@ -1,0 +1,79 @@
+---
+title: Flujo de datos — Frontend React HEROback
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#6366f1"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#4338ca"
+    lineColor: "#f59e0b"
+    secondaryColor: "#1c1c38"
+    tertiaryColor: "#25254a"
+    fontSize: "14px"
+---
+sequenceDiagram
+    actor U as 👤 Usuario
+    participant LS as 💾 localStorage
+    participant TC as ThemeContext
+    participant AC as AuthContext
+    participant HK as useFetch / useDebounce
+    participant API as api/client.js
+    participant BE as Backend :3000
+ 
+    note over TC,AC: Inicialización de la app (App.jsx monta providers)
+ 
+    TC->>LS: getItem("heroback:theme")
+    LS-->>TC: "dark" | "light" | null
+    TC->>TC: detectSystemTheme() si null
+    TC->>document: setAttribute("data-theme", theme)
+ 
+    AC->>LS: getItem("heroback:user") + getItem("token")
+    LS-->>AC: user cache + JWT
+    AC->>API: GET /api/auth/me  (Bearer JWT)
+    API->>BE: request
+    BE-->>API: { id, username, role, coins }
+    API-->>AC: profile fresco
+    AC->>LS: setItem("heroback:user", profile)
+ 
+    note over U,BE: Flujo de Login
+ 
+    U->>AC: login({ email, password })
+    AC->>API: POST /api/auth/login
+    API->>BE: { email, password }
+    BE-->>API: { token, user }
+    API-->>AC: { token, user }
+    AC->>LS: setItem("token", token)
+    AC->>LS: setItem("heroback:user", user)
+    AC->>AC: setUser(user)
+ 
+    note over U,BE: Flujo catálogo (HeroesPage)
+ 
+    U->>HK: escribe en buscador
+    HK->>HK: useDebounce(400ms)
+    HK->>LS: setItem("heroback:filters", {...})
+    HK->>API: GET /api/heroes?name__like=&alignment=&page=
+    API->>BE: request + Bearer JWT si disponible
+    BE-->>API: { data: [...], pagination: {...} }
+    API-->>HK: data
+    HK->>U: renderiza HeroGrid con skeletons → tarjetas
+ 
+    note over U,BE: Gestión de equipos (TeamsPage)
+ 
+    U->>HK: useFetch(getMyTeams)
+    HK->>API: GET /api/teams
+    API->>BE: request + Bearer JWT
+    BE-->>API: [ { id, name, TeamHeroes: [...] } ]
+    API-->>HK: teams[]
+    U->>API: POST /api/teams/:id/heroes { userHeroId }
+    API->>BE: request + Bearer JWT
+    BE-->>API: { message, teamHero }
+    API-->>U: refresh() → re-fetch equipos
+ 
+    note over U,BE: Toggle de tema
+ 
+    U->>TC: toggle()
+    TC->>TC: setTheme("light" | "dark")
+    TC->>LS: setItem("heroback:theme", theme)
+    TC->>document: setAttribute("data-theme", theme)
+    document->>U: CSS vars conmutan → UI re-renderiza
+ 

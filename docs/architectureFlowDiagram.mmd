@@ -1,0 +1,104 @@
+---
+title: Arquitectura General — HEROback
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#6366f1"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#4338ca"
+    lineColor: "#f59e0b"
+    secondaryColor: "#1c1c38"
+    tertiaryColor: "#14142b"
+    background: "#0b0b14"
+    fontSize: "14px"
+---
+graph TB
+    subgraph CLIENT["🖥  Cliente (navegador)"]
+        direction TB
+        REACT["⚛  Frontend React + Vite<br/>localhost:5173"]
+        LS[("💾 localStorage<br/>token · user · theme · filters")]
+        REACT <-->|"useState / useEffect<br/>useFetch · useLocalStorage"| LS
+    end
+ 
+    subgraph PROXY["🔀  Vite Dev Proxy"]
+        VP["/api/* → :3000"]
+    end
+ 
+    subgraph BACKEND["🟢  Backend Express (HEROback)<br/>localhost:3000"]
+        direction TB
+        IDX["index.js<br/>(entry point)"]
+ 
+        subgraph MW["Middlewares"]
+            AUTH_MW["verifyToken (JWT)"]
+            SESSION["session / injectUser"]
+            QF["queryFeatures<br/>(paginación · filtros)"]
+        end
+ 
+        subgraph ROUTES["Rutas API  /api/*"]
+            R_AUTH["/auth  — register · login · me"]
+            R_HEROES["/heroes  — CRUD + mis-heroes"]
+            R_IMG["/heroes/:id/image  🖼 proxy"]
+            R_STORE["/store  — buy · add-hero"]
+            R_TEAMS["/teams  — CRUD + heroes"]
+            R_PRODUCTS["/products"]
+            R_USERS["/users"]
+            R_ADMIN["/admin/stats"]
+        end
+ 
+        subgraph SERVICES["Servicios"]
+            S_IMG["imageProxyService<br/>(caché en memoria · anti-SSRF)"]
+            S_HERO["heroService"]
+            S_TEAM["teamService<br/>addHero · removeHero"]
+            S_AUTH["authService (JWT · bcrypt)"]
+            S_STORE["userStoreService"]
+        end
+ 
+        subgraph VIEWS["Vistas Pug (legacy)"]
+            PUG["/  /heroes  /teams<br/>/dashboard  /admin …"]
+        end
+    end
+ 
+    subgraph DB["🐘  PostgreSQL (Docker)<br/>puerto 5432"]
+        direction LR
+        T_USERS[("users")]
+        T_HEROES[("heroes")]
+        T_TEAMS[("teams")]
+        T_TH[("team_heroes")]
+        T_UH[("user_heroes")]
+        T_PROD[("products")]
+        T_UP[("user_products")]
+    end
+ 
+    subgraph EXT["🌐  Servicios externos"]
+        SH_API["superheroapi.com<br/>(seed · refresh-images)"]
+        SH_IMG["superherodb.com<br/>(imágenes — hotlink protegido)"]
+    end
+ 
+    REACT -->|"fetch /api/*<br/>Authorization: Bearer JWT"| PROXY
+    PROXY -->|"reverse proxy"| IDX
+    IDX --> MW
+    MW --> ROUTES
+    ROUTES --> SERVICES
+    SERVICES <-->|"Sequelize ORM"| DB
+    R_IMG --> S_IMG
+    S_IMG -->|"fetch sin Referer"| SH_IMG
+ 
+    SH_API -.->|"npm run seed:live<br/>npm run seed:images"| SERVICES
+ 
+    R_HEROES --> S_HERO
+    R_TEAMS --> S_TEAM
+    R_AUTH --> S_AUTH
+    R_STORE --> S_STORE
+ 
+    IDX --> VIEWS
+ 
+    style CLIENT fill:#14142b,stroke:#6366f1,color:#e7e7f4
+    style BACKEND fill:#1a1a3a,stroke:#6366f1,color:#e7e7f4
+    style DB fill:#0f172a,stroke:#4338ca,color:#e7e7f4
+    style EXT fill:#1c1304,stroke:#f59e0b,color:#e7e7f4
+    style PROXY fill:#1c1c38,stroke:#f59e0b,color:#e7e7f4
+    style MW fill:#25254a,stroke:#6366f1,color:#e7e7f4
+    style ROUTES fill:#1a1a3a,stroke:#6366f1,color:#e7e7f4
+    style SERVICES fill:#25254a,stroke:#6366f1,color:#e7e7f4
+    style VIEWS fill:#14142b,stroke:#3f3f7a,color:#9494b8
+ 
