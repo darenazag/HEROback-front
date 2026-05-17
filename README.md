@@ -108,7 +108,9 @@ Esto instala únicamente tres dependencias de producción:
 ### Paso 3 — Asegurarse de que el backend está corriendo
  
 ```bash
-# Desde el directorio del backend HEROback:
+# backend HEROback:
+git clone https://github.com/darenazag/HEROback.git
+npm install
 npm run dev
 # → Express escuchando en http://localhost:3000
 ```
