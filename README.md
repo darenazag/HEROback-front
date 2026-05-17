@@ -302,11 +302,11 @@ El token ha expirado o es inválido. Cierra sesión y vuelve a entrar. Si el pro
  
 ### Error de CORS en producción
  
-En producción el proxy de Vite no existe. Debes configurar el proxy en tu servidor web (ver sección 11) o habilitar CORS en el backend añadiendo el dominio del frontend en la lista de orígenes permitidos.
+En producción el proxy de Vite no existe. Debes habilitar CORS en el backend añadiendo el dominio del frontend en la lista de orígenes permitidos.
  
 ### Página en blanco tras desplegar
  
-Asegúrate de que el servidor sirve `index.html` para cualquier ruta no encontrada (SPA fallback). Ver ejemplo Nginx de la sección 11.
+Asegúrate de que el servidor sirve `index.html` para cualquier ruta no encontrada (SPA fallback).
  
 ### `npm run dev` falla con `Error: Cannot find module`
  
