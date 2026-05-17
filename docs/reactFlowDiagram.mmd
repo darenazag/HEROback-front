@@ -20,7 +20,7 @@ sequenceDiagram
     participant API as api/client.js
     participant BE as Backend :3000
  
-    note over TC,AC: Inicialización de la app (App.jsx monta providers)
+    note over LS,HK: Inicialización de la app (App.jsx monta providers)
  
     TC->>LS: getItem("heroback:theme")
     LS-->>TC: "dark" | "light" | null
