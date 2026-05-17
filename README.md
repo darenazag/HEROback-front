@@ -111,6 +111,7 @@ Esto instala únicamente tres dependencias de producción:
 # backend HEROback:
 git clone https://github.com/darenazag/HEROback.git
 npm install
+npm run seed
 npm run dev
 # → Express escuchando en http://localhost:3000
 ```
